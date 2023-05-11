@@ -21,7 +21,7 @@ def traer_datos(path:str)->list:
                 razas = lectura_datos[2].split("-")
                 personaje["Raza"] = razas
             else:          
-                personaje["Raza"] = lectura_datos[2].strip()
+                personaje["Raza"] = lectura_datos[2]
             personaje["Poder de pelea"] = lectura_datos[3]
             personaje["Poder de ataque"] = lectura_datos[4]
             habilidades_divididas = re.split(r"\|\$\%", lectura_datos[5])
@@ -338,7 +338,8 @@ def fomar_datos_json(lista:list,raza_pj:str,habilidad_pj:str)->list:
                 if len(habilidades) == 0 :
                     habilidades = "(sin habilidades extras)"
                 else:
-                    habilidades = " + ".join(habilidades)
+                    if len(habilidades) > 1:
+                        habilidades = " + ".join(habilidades)
                 datos = (f"{nombre} - {poder_ataque} - {habilidades}")
                 lista_datos.append(datos)
 
