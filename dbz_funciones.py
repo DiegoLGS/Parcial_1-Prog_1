@@ -126,10 +126,11 @@ def personajes_por_raza(lista:list,mostrar:bool=True)->dict:
         personaje_nuevo = {}
         personaje_nuevo["Nombre"] = personaje["Nombre"]
         personaje_nuevo["Poder de ataque"] = personaje["Poder de ataque"]
+        personaje_nuevo["Poder de pelea"] = personaje["Poder de pelea"]
         personaje_nuevo["Habilidades"] = []
         for habilidad in personaje["Habilidades"]:
             personaje_nuevo["Habilidades"].append(habilidad)
-
+        
         if type(personaje["Raza"]) == list:
             for raza in personaje["Raza"]:
                 razas_unicas[raza].append(personaje_nuevo)
@@ -388,6 +389,40 @@ def leer_json(path:str):
         data = json.load(mi_archivo_json)
         for linea in data:
             print(linea)
+
+def agregar_poder_saiyan(lista:list)->list:
+    personajes_actualizados = []
+    for personaje in lista:
+        if type(personaje["Raza"]) == list:
+            for raza in personaje["Raza"]:
+                if raza == "Saiyan":
+                    personaje["Poder de pelea"] = int(personaje["Poder de pelea"])
+                    personaje["Poder de pelea"] += personaje["Poder de pelea"] * 50 / 100
+                    personaje["Poder de ataque"] = int(personaje["Poder de ataque"])
+                    personaje["Poder de ataque"] += personaje["Poder de ataque"] * 70 / 100
+                    personaje["Habilidades"].append("transformación nivel dios")
+                    personajes_actualizados.append(personaje)
+        else:
+            if personaje["Raza"] == "Saiyan":
+                personaje["Poder de pelea"] = int(personaje["Poder de pelea"])
+                personaje["Poder de pelea"] += personaje["Poder de pelea"] * 50 / 100
+                personaje["Poder de ataque"] = int(personaje["Poder de ataque"])
+                personaje["Poder de ataque"] += personaje["Poder de ataque"] * 70 / 100
+                personaje["Habilidades"].append("transformación nivel dios")
+                personajes_actualizados.append(personaje)
+    print("-----Se agregó poder a los Saiyan-----")
+    guardar_en_CSV(personajes_actualizados)
+
+    return lista
+
+def guardar_en_CSV(personajes_actualizados):
+    archivo = open("personajes_guardados.csv","w",encoding="utf8")
+    for personaje in personajes_actualizados:
+        nuevo_pj = f'{personaje["Nombre"]}\n'
+        
+        archivo.write(nuevo_pj)
+    archivo.close()
+
     
 def imprimir_menu():    
     """ 
@@ -402,7 +437,8 @@ def imprimir_menu():
     print("5 - Jugar Batalla")
     print("6 - Guardar Json (ingresando raza y habilidad)")
     print("7 - Leer Json")
-    print("8 - Salir del programa")
+    print("8 - Agregar poder a los Saiyan")
+    print("9 - Salir del programa")
 
 def dbz_menu_principal():
     """ 
@@ -433,7 +469,9 @@ def dbz_menu_principal():
             case "7":
                 leer_json(path)
             case "8":
+                lista_personajes = agregar_poder_saiyan(lista_personajes)
+            case "9":
                 print("Gracias por usar nuestra aplicación!")
-                break  
+                break                  
             case _:
                 print("La opción ingresada no es válida")
