@@ -391,6 +391,10 @@ def leer_json(path:str):
             print(linea)
 
 def agregar_poder_saiyan(lista:list)->list:
+    if len(lista) == 0 or not type(lista) == list:
+        print("La lista está vacía o tipo de dato inválido")
+        return False
+    
     personajes_actualizados = []
     for personaje in lista:
         if type(personaje["Raza"]) == list:
